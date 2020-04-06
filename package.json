@@ -91,6 +91,7 @@
     "markdown-it-ins": "~2.0.0",
     "markdown-it-mark": "~2.0.0",
     "markdown-it-mathjax": "~2.0.0",
+    "markdown-it-multimd-table": "^4.0.1",
     "markdown-it-regexp": "~0.4.0",
     "markdown-it-sub": "~1.0.0",
     "markdown-it-sup": "~1.0.0",

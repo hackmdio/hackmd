@@ -1093,6 +1093,11 @@ md.use(require('markdown-it-mathjax')({
 }))
 md.use(require('markdown-it-imsize'))
 md.use(require('markdown-it-ruby'))
+md.use(require('markdown-it-multimd-table'), {
+  multiline: true,
+  rowspan: true,
+  headerless: false
+})
 
 window.emojify.setConfig({
   blacklist: {
