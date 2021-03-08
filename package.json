@@ -52,6 +52,7 @@
     "deep-freeze": "~0.0.1",
     "ejs": "~2.6.2",
     "express": "~4.17.1",
+    "express-eauth": "~2.0.0-beta.1",
     "express-session": "~1.16.2",
     "formidable": "~1.2.1",
     "helmet": "~3.20.0",
