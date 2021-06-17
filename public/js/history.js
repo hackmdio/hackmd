@@ -181,7 +181,7 @@ export function getStorageHistory (callback) {
   let data = store.get('notehistory')
   if (data) {
     if (typeof data === 'string') { data = JSON.parse(data) }
-    callback(data)
+    return callback(data)
   }
   // eslint-disable-next-line standard/no-callback-literal
   callback([])
