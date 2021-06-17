@@ -19,6 +19,9 @@
                                 <button class="btn btn-sm btn-success ui-signin" data-toggle="modal" data-target=".signin-modal"><%= __('Sign In') %></button>
                                 <% } %>
                             </div>
+                            <form name="exportNoteData" action="<%- serverURL %>/me/export" method="post">
+                                <input type="hidden" name="_csrf" value="<%- csrfToken %>">
+                            </form>
                             <div class="ui-signout" style="float: right; margin-top: 8px;<% if(!signin) { %> display: none;<% } %>">
                                 <a type="button" href="<%- serverURL %>/new" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> <%= __('New note') %></a>
                                 <span class="ui-profile dropdown pull-right">
@@ -27,7 +30,7 @@
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="profileLabel">
                                         <li><a href="<%- serverURL %>/features"><i class="fa fa-dot-circle-o fa-fw"></i> <%= __('Features') %></a></li>
-                                        <li><a href="<%- serverURL %>/me/export"><i class="fa fa-cloud-download fa-fw"></i> <%= __('Export user data') %></a></li>
+                                        <li><a href="#" class="ui-export-user-data"><i class="fa fa-cloud-download fa-fw"></i> <%= __('Export user data') %></a></li>
                                         <li><a class="ui-delete-user" data-toggle="modal" data-target=".delete-user-modal"><i class="fa fa-trash fa-fw"></i> <%= __('Delete user') %></a></li>
                                         <li><a href="<%- serverURL %>/logout"><i class="fa fa-sign-out fa-fw"></i> <%= __('Sign Out') %></a></li>
                                     </ul>

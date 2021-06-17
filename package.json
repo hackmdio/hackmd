@@ -49,6 +49,7 @@
     "connect-session-sequelize": "~6.0.0",
     "cookie": "~0.4.0",
     "cookie-parser": "~1.4.4",
+    "csurf": "~1.11.0",
     "deep-freeze": "~0.0.1",
     "ejs": "~2.6.2",
     "express": "~4.17.1",
