@@ -26,14 +26,7 @@ import {
   setloginStateChangeEvent
 } from './lib/common/login'
 
-import {
-  debug,
-  DROPBOX_APP_KEY,
-  noteid,
-  noteurl,
-  urlpath,
-  version
-} from './lib/config'
+import { getConfig } from './lib/config'
 
 import {
   autoLinkify,
@@ -90,6 +83,24 @@ require('../css/site.css')
 require('spin.js/spin.css')
 
 require('highlight.js/styles/github-gist.css')
+
+let debug,
+  DROPBOX_APP_KEY,
+  noteid,
+  noteurl,
+  urlpath,
+  version
+
+function updateConfig () {
+  const config = getConfig()
+  debug = config.debug
+  DROPBOX_APP_KEY = config.DROPBOX_APP_KEY
+  noteid = config.noteid
+  noteurl = config.noteurl
+  urlpath = config.urlpath
+  version = config.version
+}
+updateConfig()
 
 var defaultTextHeight = 20
 var viewportMargin = 20
@@ -1266,6 +1277,62 @@ $('#revisionModalRevert').click(function () {
   editor.setValue(revision.content)
   ui.modal.revision.modal('hide')
 })
+
+// custom note url modal
+const updateNoteUrl = (noteUrl = '') => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      method: 'PATCH',
+      url: `/api/notes/${noteid}/alias`,
+      data: JSON.stringify({
+        alias: noteUrl
+      }),
+      contentType: 'application/json;charset=utf-8',
+      success: resolve,
+      error: reject
+    })
+  })
+}
+
+ui.modal.customNoteUrl.on('submit', function (e) {
+  e.preventDefault()
+  const showErrorMessage = (msg) => {
+    ui.modal.customNoteUrl.find('.js-error-message').text(msg)
+    ui.modal.customNoteUrl.find('.js-error-alert').show()
+  }
+  const hideErrorMessage = () => ui.modal.customNoteUrl.find('.js-error-alert').hide()
+
+  const customUrl = ui.modal.customNoteUrl.find('[name="custom-url"]').val()
+  if (!/^[0-9a-z-_]+$/.test(customUrl)) {
+    showErrorMessage('The url must be lowercase letters, decimal digits, hyphen or underscore.')
+    return
+  }
+
+  updateNoteUrl(customUrl)
+    .then(
+      ({ status }) => {
+        if (status === 'ok') {
+          hideErrorMessage()
+          ui.modal.customNoteUrl.modal('hide')
+        }
+      },
+      err => {
+        if (err.status === 400 && err.responseJSON.message) {
+          showErrorMessage(err.responseJSON.message)
+          return
+        }
+        if (err.status === 403) {
+          showErrorMessage('Only note owner can edit custom url.')
+          return
+        }
+        showErrorMessage('Something wrong.')
+      }
+    )
+    .catch(() => {
+      showErrorMessage('Something wrong.')
+    })
+})
+
 // snippet projects
 ui.modal.snippetImportProjects.change(function () {
   var accesstoken = $('#snippetImportModalAccessToken').val()
@@ -1803,6 +1870,7 @@ socket.on('version', function (data) {
     }
   }
 })
+
 var authors = []
 var authorship = []
 var authorMarks = {} // temp variable
@@ -2215,6 +2283,12 @@ socket.on('cursor blur', function (data) {
   if (cursor.length > 0) {
     cursor.stop(true).fadeOut()
   }
+})
+
+socket.on('alias updated', function (data) {
+  const alias = data.alias
+  history.replaceState({}, '', alias)
+  updateConfig()
 })
 
 var options = {

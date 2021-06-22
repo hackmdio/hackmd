@@ -83,7 +83,8 @@ export const getUIElements = () => ({
     snippetImportProjects: $('#snippetImportModalProjects'),
     snippetImportSnippets: $('#snippetImportModalSnippets'),
     revision: $('#revisionModal'),
-    pandocExport: $('.pandoc-export-modal')
+    pandocExport: $('.pandoc-export-modal'),
+    customNoteUrl: $('#customNoteUrlModal')
   }
 })
 
