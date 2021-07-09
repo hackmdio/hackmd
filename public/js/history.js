@@ -219,6 +219,30 @@ export function parseStorageToHistory (list, callback) {
   parseToHistory(list, [], callback)
 }
 
+export function parseServerToShareHistory (list, offset, callback) {
+  $.get(`${serverurl}/sharehistory?offset=${offset}`)
+    .done(data => {
+      if (data.history) {
+        parseToHistory(list, data.history, callback)
+      }
+    })
+    .fail((xhr, status, error) => {
+      console.error(xhr.responseText)
+    })
+}
+
+export function parseServerToSearchShareHistory (list, offset, keywords, callback) {
+  $.get(`${serverurl}/sharehistory?offset=${offset}&&keywords=${keywords}`)
+    .done(data => {
+      if (data.history) {
+        parseToHistory(list, data.history, callback)
+      }
+    })
+    .fail((xhr, status, error) => {
+      console.error(xhr.responseText)
+    })
+}
+
 function parseToHistory (list, notehistory, callback) {
   if (!callback) return
   else if (!list || !notehistory) callback(list, notehistory)

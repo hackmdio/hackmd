@@ -122,6 +122,36 @@
                 <ul class="pagination"></ul>
             </div>
 
+            </br>
+
+            <div id="share-history" class="section"<% if(!signin) { %> style="display:none;"<% } %>>
+                <h1><%= __('Share Note') %></h1>
+                <br>
+                <form class="form-inline">
+                    <div class="form-group" style="vertical-align: bottom;">
+                        <input class="form-control ui-share-use-tags" placeholder="<%= __('Select tags...') %>" />
+                    </div>
+                    <div class="form-group">
+                        <input class="share-search form-control" placeholder="<%= __('Search keyword...') %>" />
+                    </div>
+                    <a href="#" class="sort btn btn-default" data-sort="text" title="<%= __('Sort by title') %>">
+                    <%= __('Title') %>
+                    </a>
+                    <a href="#" class="sort btn btn-default" data-sort="timestamp" title="<%= __('Sort by time') %>">
+                    <%= __('Time') %>
+                    </a>
+                    <a href="#" class="btn btn-default ui-refresh-share-history" title="<%= __('Refresh history') %>"><i class="fa fa-refresh"></i></a>
+                </form>
+                <h4 class="ui-nosharehistory" style="display:none;">
+                    <%= __('No history') %>
+                </h4>
+                <a href="#" class="btn btn-primary ui-import-from-browser" style="display:none;"><%= __('Import from browser') %></a>
+                <ul id="share-history-list" class="share-list">
+                </ul>
+                <ul class="share-pagination" style="display:none;"></ul>
+                <div class="share-history-more">more</div>
+            </div>
+
             <div class="mastfoot">
                 <div class="inner">
                     <select class="ui-locale">

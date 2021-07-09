@@ -18,6 +18,8 @@ services:
     # build:
     #   context: ..
     #   dockerfile: ./deployments/Dockerfile
+    #   args:
+    #     RUNTIME: hackmdio/runtime:node-10-d27854ef
     environment:
       - CMD_DB_URL=postgres://codimd:change_password@database/codimd
       - CMD_USECDN=false

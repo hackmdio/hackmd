@@ -117,5 +117,6 @@
     "Powered by %s": "技術支援：%s",
     "Register": "註冊",
     "Export with pandoc": "使用 pandoc 匯出",
-    "Select output format": "選擇輸出格式"
+    "Select output format": "選擇輸出格式",
+    "Share Note": "團隊公開筆記"
 }

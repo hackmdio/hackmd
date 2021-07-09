@@ -117,5 +117,6 @@
     "Powered by %s": "由 %s 驱动",
     "Register": "注册",
     "Export with pandoc": "使用 Pandoc 导出",
-    "Select output format": "选择输出格式"
+    "Select output format": "选择输出格式",
+    "Share Note": "团队公开笔记"
 }

@@ -100,5 +100,6 @@
 	"Select From Available Snippets": "Виберіть з доступних фрагментів коду",
 	"OR": "АБО",
 	"Export to Snippet": "Експорт фрагменту коду",
-	"Select Visibility Level": "Вибрати рівень видимості"
+	"Select Visibility Level": "Вибрати рівень видимості",
+    "Share Note": "Командні публічні записки"
 }

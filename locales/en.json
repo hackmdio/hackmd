@@ -117,5 +117,6 @@
 	"Powered by %s": "Powered by %s",
 	"Register": "Register",
 	"Export with pandoc": "Export with pandoc",
-	"Select output format": "Select output format"
+	"Select output format": "Select output format",
+    "Share Note": "Team Public Notes"
 }

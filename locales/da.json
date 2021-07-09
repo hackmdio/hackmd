@@ -100,5 +100,6 @@
 	"Select From Available Snippets": "Vælg fra tilgængelige Snippets",
 	"OR": "ELLER",
 	"Export to Snippet": "Eksportér til Snippet",
-	"Select Visibility Level": "Vælg synlighedsniveau"
+	"Select Visibility Level": "Vælg synlighedsniveau",
+    "Share Note": "Hold offentlige noter"
 }
