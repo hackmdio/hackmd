@@ -11,6 +11,15 @@ body {
     /*overflow: hidden;*/
 }
 
+a[disabled='disabled'] {
+    color: #939090 !important;
+    pointer-events: none;
+}
+
+a[disabled='disabled']:hover {
+    color: #939090 !important;
+}
+
 .night a,
 .night .open-files-container li.selected a {
     color: #5EB7E0;

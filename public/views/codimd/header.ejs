@@ -76,20 +76,35 @@
                 <li role="presentation"><a role="menuitem" class="ui-help" href="#" data-toggle="modal" data-target=".help-modal"><i class="fa fa-question-circle fa-fw"></i> Help</a>
                 </li>
             </ul>
-            <a class="btn btn-link ui-mode">
+            <% if(!allowVisibleSource) { %>
+            <a class="btn btn-link ui-mode" data-block-source="<%= !allowVisibleSource %>">
                 <i class="fa fa-pencil"></i>
             </a>
+            <% } else { %>
+            <a class="btn btn-link ui-mode" data-block-source="<%= !allowVisibleSource %>">
+                <i class="fa fa-pencil"></i>
+            </a>
+            <% } %>
         </div>
     </div>
     <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav navbar-form navbar-left" style="padding:0;">
             <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-default ui-edit" title="<%= __('Edit') %> (Ctrl+Alt+E)">
-                    <input type="radio" name="mode" autocomplete="off"><i class="fa fa-pencil"></i>
-                </label>
-                <label class="btn btn-default ui-both" title="<%= __('Both') %> (Ctrl+Alt+B)">
-                    <input type="radio" name="mode" autocomplete="off"><i class="fa fa-columns"></i>
-                </label>
+                <% if(!allowVisibleSource) { %>
+                    <label class="btn btn-default ui-edit" data-block-source="<%= !allowVisibleSource %>" title="<%= __('Edit') %> (Ctrl+Alt+E)">
+                        <input type="radio" name="mode" autocomplete="off"><i class="fa fa-pencil"></i>
+                    </label>
+                    <label class="btn btn-default ui-both" data-block-source="<%= !allowVisibleSource %>" title="<%= __('Both') %> (Ctrl+Alt+B)">
+                        <input type="radio" name="mode" autocomplete="off"><i class="fa fa-columns"></i>
+                    </label>
+                <% } else { %>
+                    <label class="btn btn-default ui-edit" data-block-source="<%= !allowVisibleSource %>" title="<%= __('Edit') %> (Ctrl+Alt+E)">
+                        <input type="radio" name="mode" autocomplete="off"><i class="fa fa-pencil"></i>
+                    </label>
+                    <label class="btn btn-default ui-both" data-block-source="<%= !allowVisibleSource %>" title="<%= __('Both') %> (Ctrl+Alt+B)">
+                        <input type="radio" name="mode" autocomplete="off"><i class="fa fa-columns"></i>
+                    </label>
+                <% } %>
                 <label class="btn btn-default ui-view" title="<%= __('View') %> (Ctrl+Alt+V)">
                     <input type="radio" name="mode" autocomplete="off"><i class="fa fa-eye"></i>
                 </label>

@@ -256,6 +256,7 @@ const statusType = {
 
 // global vars
 window.loaded = false
+let blockSourceView = false
 let needRefresh = false
 let isDirty = false
 let editShown = false
@@ -290,6 +291,7 @@ const lastInfo = {
 }
 let personalInfo = {}
 let onlineUsers = []
+let currentPermission = ''
 const fileTypes = {
   pl: 'perl',
   cgi: 'perl',
@@ -318,6 +320,21 @@ defaultTextHeight = parseInt($('.CodeMirror').css('line-height'))
 
 //  initalize ui reference
 const ui = getUIElements()
+
+// controls to need disabled when allowVisibleSource run
+// this prevent user to access source code
+const modeChangeControls = {
+  edit: ui.toolbar.edit,
+  both: ui.toolbar.both
+}
+const exportImportControls = {
+  revision: ui.toolbar.extra.revision,
+  markdown: ui.toolbar.download.markdown,
+  rawhtml: ui.toolbar.download.rawhtml,
+  gist: ui.toolbar.import.gist,
+  clipboard: ui.toolbar.import.clipboard,
+  pandoc: ui.toolbar.download.pandoc
+}
 
 // page actions
 var opts = {
@@ -423,6 +440,8 @@ Visibility.change(function (e, state) {
 
 // when page ready
 $(document).ready(function () {
+  if (ui.toolbar.edit.data('blockSource')) { replaceUrlToViewMode(window.location.href) }
+
   idle.checkAway()
   checkResponsive()
   // if in smaller screen, we don't need advanced scrollbar
@@ -470,12 +489,14 @@ $(document).ready(function () {
   // allow on all tags
   key.filter = function (e) { return true }
   key('ctrl+alt+e', function (e) {
+    if (blockSourceView) return
     changeMode(modeType.edit)
   })
   key('ctrl+alt+v', function (e) {
     changeMode(modeType.view)
   })
   key('ctrl+alt+b', function (e) {
+    if (blockSourceView) return
     changeMode(modeType.both)
   })
   // toggle-dropdown
@@ -498,6 +519,81 @@ $(window).on('unload', function () {
 $(window).on('error', function () {
   // setNeedRefresh();
 })
+
+function checkParameter (isLogin, permission) {
+  if (typeof isLogin !== 'boolean' || !permission) {
+    throw new Error('one or more parameter is incorrect')
+  }
+  return allowVisibleSource(isLogin, permission)
+}
+
+function replaceUrlToViewMode (url) {
+  const urlHasEditOrBoth = /\?edit|\?both/
+  if (urlHasEditOrBoth.test(url)) {
+    const newUrl = url.toString().replace(urlHasEditOrBoth, '?view')
+    window.location.replace(newUrl)
+  }
+}
+
+function allowVisibleSource (isLogin, permission) {
+  switch (permission) {
+    case 'freely':
+      blockSourceView = false
+      break
+    case 'editable':
+    case 'limited':
+      if (!isLogin) {
+        blockSourceView = true
+        disableControls()
+      } else {
+        blockSourceView = false
+        enableControls()
+      }
+      break
+    case 'locked':
+    case 'protected':
+    case 'private':
+      if (personalInfo.userid && window.owner && personalInfo.userid === window.owner) {
+        blockSourceView = false
+      } else {
+        blockSourceView = true
+        disableControls()
+      }
+      break
+  }
+}
+
+function disableControls () {
+  for (const key of Object.keys(modeChangeControls)) {
+    modeChangeControls[key].attr({
+      disabled: 'disabled'
+    })
+  }
+  for (const key of Object.keys(exportImportControls)) {
+    exportImportControls[key].attr({
+      disabled: 'disabled'
+    })
+    exportImportControls[key].parent().css('cursor', 'not-allowed')
+  }
+}
+
+function enableControls () {
+  for (const key of Object.keys(modeChangeControls)) {
+    modeChangeControls[key].removeAttr('disable')
+  }
+  for (const key of Object.keys(exportImportControls)) {
+    exportImportControls[key].removeAttr('disable')
+  }
+}
+
+function userIsLogin (userPersonalInfo) {
+  return !!userPersonalInfo && !!userPersonalInfo.login
+}
+
+function isAllowUserChangeMode () {
+  const isOwner = personalInfo.userid && window.owner && personalInfo.userid === window.owner
+  return isOwner || !blockSourceView
+}
 
 setupSyncAreas(ui.area.codemirrorScroll, ui.area.view, ui.area.markdown, editor)
 
@@ -1567,11 +1663,11 @@ function importFromUrl (url) {
 
 // mode
 ui.toolbar.mode.click(function () {
-  toggleMode()
+  if (isAllowUserChangeMode()) { return toggleMode() }
 })
 // edit
 ui.toolbar.edit.click(function () {
-  changeMode(modeType.edit)
+  if (isAllowUserChangeMode()) { return changeMode(modeType.edit) }
 })
 // view
 ui.toolbar.view.click(function () {
@@ -1579,7 +1675,7 @@ ui.toolbar.view.click(function () {
 })
 // both
 ui.toolbar.both.click(function () {
-  changeMode(modeType.both)
+  if (isAllowUserChangeMode()) { return changeMode(modeType.both) }
 })
 
 ui.toolbar.night.click(function () {
@@ -2047,6 +2143,16 @@ socket.on('refresh', function (data) {
   editor.setOption('maxLength', editorInstance.config.docmaxlength)
   updateInfo(data)
   updatePermission(data.permission)
+  currentPermission = data.permission
+  // run allowVisibleSource functionality
+  if (ui.toolbar.edit.data('blockSource')) {
+    try {
+      checkParameter(userIsLogin(personalInfo), currentPermission)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  if (ui.toolbar.edit.data('blockSource') && blockSourceView) { replaceUrlToViewMode(window.location.href) }
   if (!window.loaded) {
     // auto change mode if no content detected
     var nocontent = editor.getValue().length <= 0
